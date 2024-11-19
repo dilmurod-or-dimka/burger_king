@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Blog detail
+{% endblock %}
+
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2>Blog Detail</h2>
+                </div>
+                <div class="col-12">
+                    <a href="">Home</a>
+                    <a href="">Detail</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Single Post Start-->
+    <div class="single">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="single-content">
+                        <img src="{{ blog.get_first_photo }}"/>
+                        <h2>{{ blog.title }}</h2>
+                        <p>{{ blog.description }}</p>
+                    </div>
+                    <div class="single-related">
+                        <h2>Related Post</h2>
+                        <div class="owl-carousel related-slider">
+                            {% for blog in blogs %}
+                            <div class="post-item">
+                                <div class="post-img">
+                                    <img src="{{ blog.get_first_photo }}"/>
+                                </div>
+                                <div class="post-text">
+                                    <a href="{% url 'blog_detail' slug=blog.slug %}">{{ blog.title }}</a>
+                                    <div class="post-meta">
+                                        <p><a href="{% url 'blog_detail' slug=blog.slug %}">Admin</a></p>
+                                        <p><a href="{% url 'blog_detail' slug=blog.slug %}">{{ blog.date }}</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="single-comment">
+                        <h2>{{ blog.comment_set.count }} Comments</h2>
+                        <ul class="comment-list">
+                            {% for comment in comments %}
+                            <li class="comment-item">
+                                <div class="comment-body">
+                                    <div class="comment-text">
+                                        <h3><a href="">{{ comment.user_name }}</a></h3>
+                                        <span>{{ comment.created }}</span>
+                                        <p>{{ comment.content }}</p>
+                                    </div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="comment-form">
+                        <h2>Leave a comment</h2>
+                        <form method="POST" action="{% url 'add_comment' slug=blog.slug %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="name">Name *</label>
+                                <input type="text" name="user_name" class="form-control" id="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" class="form-control" name="email" id="email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message">Message *</label>
+                                <textarea id="message" cols="30" name="content" rows="5" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Post Comment" class="btn custom-btn">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="sidebar">
+                        <div class="sidebar-widget">
+                            <div class="search-widget">
+                                <form>
+                                    <input class="form-control" type="text" placeholder="Search Keyword">
+                                    <button class="btn"><i class="fa fa-search"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="sidebar-widget">
+                            <h2 class="widget-title">Recent Post</h2>
+                            <div class="recent-post">
+                                {% for blog in blog_date %}
+                                <div class="post-item">
+                                    <div class="post-img">
+                                        <img src="{{ blog.get_first_photo }}"/>
+                                    </div>
+                                    <div class="post-text">
+                                        <a href="{% url 'blog_detail' slug=blog.slug %}">{{ blog.title }}</a>
+                                        <div class="post-meta">
+                                            <p>By<a href="{% url 'blog_detail' slug=blog.slug %}">Admin</a></p>
+                                            <p><a href="{% url 'blog_detail' slug=blog.slug %}">{{ blog.date }}</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Single Post End-->
+{% endblock %}
